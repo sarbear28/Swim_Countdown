@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 from datetime import date, timedelta
 
 app = FastAPI()
@@ -93,3 +94,13 @@ def countdown():
     </html>
     """
     return HTMLResponse(content=html)
+
+@app.get("/remaining")
+def remaining_days():
+    today = date.today()
+    total_practices = count_practices_up_to(end_date)
+    completed = count_practices_up_to(today)
+    remaining = max(total_practices - completed, 0)
+    
+    # Return only remaining days as JSON
+    return JSONResponse(content={"remaining": remaining})
